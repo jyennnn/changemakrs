@@ -19,17 +19,17 @@ export default async function PrivateLayout({ children }: { children: React.Reac
         <div className="flex items-center justify-between">
         <div className="flex gap-6 text-muted-foreground">
           <Link href="/dashboard">
-            <Home className="w-7 h-7 hover:text-purple-600" />
+            <Home className="w-6 h-6 hover:text-purple-600" />
           </Link>
           <Link href="/dashboard/log">
-            <Pencil className="w-7 h-7 hover:text-purple-600" />
+            <Pencil className="w-6 h-6 hover:text-purple-600" />
           </Link>
           <Link href="/dashboard/activity">
-            <List className="w-7 h-7 hover:text-purple-600" />
+            <List className="w-6 h-6 hover:text-purple-600" />
           </Link>
         </div>
         <Link href="/dashboard/profile">
-          <User className="w-7 h-7 text-muted-foreground hover:text-purple-600" />
+          <User className="w-6 h-6 text-muted-foreground hover:text-purple-600" />
         </Link>
         </div>
       </nav>
