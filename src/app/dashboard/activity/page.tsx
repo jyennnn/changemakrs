@@ -30,6 +30,10 @@ export default async function ActivityPage() {
           .from('changemakrs-session-photos') // your bucket name
           .createSignedUrl(session.photo_url, 60 * 60) // 1 hour expiry
 
+          if (error) {
+    console.error(`Failed to sign URL for session ${session.id}:`, error.message);
+    // Optional: send error to monitoring/logging service
+  }
         return {
           ...session,
           photoUrl: data?.signedUrl || null,

@@ -1,11 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import {useState} from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Cause, SessionSchema } from "@/models/dashboard";
 import { supabase } from "../../../lib/supabase/client";
-import Lottie from 'lottie-react';
-import changeMakrsAnimation from '@/assets/animations/changemakers.json';
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -21,16 +19,6 @@ export default function LogSessionPage() {
   const [organisation, setOrganisation] = useState("");
   const [description, setDescription] = useState("");
   const [photo, setPhoto] = useState<File | null>(null);
-
- const lottieRef = useRef<any>(null);
-  const framesPerStep = 30;
-  const maxSteps = Math.floor(179 / framesPerStep); // = 5
-  const [step, setStep] = useState(0);
-
-  const goToStep = (stepNumber: number) => {
-    const frame = stepNumber * framesPerStep;
-    lottieRef.current?.goToAndStop(frame, true);
-  };
 
 
   const causeOptions = Object.values(Cause);
