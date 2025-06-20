@@ -64,11 +64,11 @@ export default async function PrivatePage() {
       </div>
 
       <div>
-        <div className="flex items-center justify-center -mt-12">
+        <div className="flex items-center justify-center -mt-20">
           <ChangemakrsAnimation sessionCount={sessionCount} />
         </div>
 
-        <p className="font-semibold text-[#6B59FF] text-center text-md -mt-8">
+        <p className="font-semibold text-[#6B59FF] text-center text-md -mt-20">
           5 more moments to a little surprise! <br />
           Thank you for being a Changemakr 💜
         </p>
