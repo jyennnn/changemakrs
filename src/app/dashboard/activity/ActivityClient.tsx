@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { format, parseISO } from 'date-fns';
+import type { Session } from '@/models/dashboard';
 
 import {
   Dialog,
@@ -15,11 +16,12 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
+import Image from 'next/image';
 
-export default function ActivityClient({ sessions }: { sessions: any[] }) {
+export default function ActivityClient({ sessions }: { sessions: (Session & { photoUrl: string | null })[] }) {
   const [search, setSearch] = useState('');
   const [sortAsc, setSortAsc] = useState(false);
-  const [selected, setSelected] = useState<any | null>(null);
+  const [selected, setSelected] = useState<Session & { photoUrl: string | null } | null>(null);
 
   const filteredSessions = useMemo(() => {
     return [...sessions]
@@ -37,7 +39,7 @@ export default function ActivityClient({ sessions }: { sessions: any[] }) {
   }, [search, sortAsc, sessions]);
 
   const grouped = useMemo(() => {
-    const groups: { [date: string]: any[] } = {};
+    const groups: { [date: string]: (Session & { photoUrl: string | null })[] } = {};
     for (const s of filteredSessions) {
       const dateKey = format(parseISO(s.date), 'dd MMMM yyyy');
       if (!groups[dateKey]) groups[dateKey] = [];
@@ -92,56 +94,55 @@ export default function ActivityClient({ sessions }: { sessions: any[] }) {
         ))}
       </ScrollArea>
 
-      {/* Detail Dialog */}
       <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
         <DialogContent className="max-w-md p-0 overflow-hidden">
-  {selected && (
-    <>
-      <DialogHeader className="p-4 border-b">
-        <DialogTitle className="text-lg">{selected.role}</DialogTitle>
-        <DialogDescription className="text-sm text-muted-foreground">
-          {selected.organisation}
-        </DialogDescription>
-      </DialogHeader>
+          {selected && (
+            <>
+              <DialogHeader className="p-4 border-b">
+                <DialogTitle className="text-lg">{selected.role}</DialogTitle>
+                <DialogDescription className="text-sm text-muted-foreground">
+                  {selected.organisation}
+                </DialogDescription>
+              </DialogHeader>
 
-      <ScrollArea className="max-h-[70vh] p-4">
-        <div className="space-y-2 text-sm">
-          <div className="flex items-center justify-between">
-            <span className="font-medium">Cause</span>
-            <Badge variant="outline">{selected.cause}</Badge>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="font-medium">Hours</span>
-            <span>{selected.hours}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="font-medium">Date</span>
-            <span>{format(parseISO(selected.date), 'dd MMM yyyy, h:mm a')}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="font-medium">Logged at</span>
-            <span>{new Date(selected.created_at).toLocaleString()}</span>
-          </div>
+              <ScrollArea className="max-h-[70vh] p-4">
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">Cause</span>
+                    <Badge variant="outline">{selected.cause}</Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">Hours</span>
+                    <span>{selected.hours}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">Date</span>
+                    <span>{format(parseISO(selected.date), 'dd MMM yyyy, h:mm a')}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">Logged at</span>
+                    <span>{new Date(selected.date).toLocaleString()}</span>
+                  </div>
 
-          {selected.description && (
-            <p className="italic text-muted-foreground pt-2">“{selected.description}”</p>
+                  {selected.description && (
+                    <p className="italic text-muted-foreground pt-2">“{selected.description}”</p>
+                  )}
+
+                  {selected.photoUrl && (
+                    <div className="mt-4">
+                      <img
+  src={selected.photoUrl}
+  alt="Proof of volunteering"
+  className="w-full rounded-xl border object-cover"
+/>
+
+                    </div>
+                  )}
+                </div>
+              </ScrollArea>
+            </>
           )}
-
-          {selected.photoUrl && (
-            <div className="mt-4">
-              <img
-                src={selected.photoUrl}
-                alt="Proof of volunteering"
-                className="w-full rounded-xl border"
-              />
-            </div>
-          )}
-        </div>
-      </ScrollArea>
-    </>
-  )}
-</DialogContent>
-
+        </DialogContent>
       </Dialog>
     </main>
   );
