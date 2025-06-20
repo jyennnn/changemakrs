@@ -14,12 +14,12 @@ export default function LoginPage() {
   const handleSignup = async (formData: FormData) => {
     const result = await signup(formData)
 
-    if (result?.error) {
+    if ('error' in result && result.error) {
       setSuccess(null)
       setError(result.error)
-    } else if (result?.success) {
+    } else if ('success' in result && result.success) {
       setError(null)
-      setSuccess(result.success)
+      setSuccess(typeof result.success === 'string' ? result.success : 'Signup successful!')
     }
   }
 
@@ -46,10 +46,10 @@ export default function LoginPage() {
         <CardContent>
           <form
             className="space-y-4"
-            action={async (formData) => {
-              // You could differentiate based on a hidden field if needed
-              // Or use 2 forms instead of one shared one
-            }}
+            // action={async (formData) => {
+            //   // You could differentiate based on a hidden field if needed
+            //   // Or use 2 forms instead of one shared one
+            // }}
           >
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
