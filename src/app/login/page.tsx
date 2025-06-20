@@ -6,29 +6,65 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
+import { Loader2 } from "lucide-react"
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
+  const [loading, setLoading] = useState<"login" | "signup" | null>(null)
 
-  const handleSignup = async (formData: FormData) => {
-    const result = await signup(formData)
+  const [formData, setFormData] = useState({ email: "", password: "" })
 
-    if ('error' in result && result.error) {
-      setSuccess(null)
-      setError(result.error)
-    } else if ('success' in result && result.success) {
-      setError(null)
-      setSuccess(typeof result.success === 'string' ? result.success : 'Signup successful!')
-    }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleLogin = async (formData: FormData) => {
-    const result = await login(formData)
+  const handleSignup = async () => {
+  setLoading("signup")
+  setError(null)
+  setSuccess(null)
+
+  try {
+    const data = new FormData()
+    data.append("email", formData.email)
+    data.append("password", formData.password)
+
+    const result = await signup(data)
 
     if (result?.error) {
-      setSuccess(null)
+      // Handle Supabase's "user already registered" wording
+      if (result.error.includes("already registered")) {
+        setError("This email is already registered. Try logging in instead.")
+      } else {
+        setError(result.error)
+      }
+    } else {
+      setSuccess("Check your inbox to confirm your email before logging in.")
+    }
+  } catch (err) {
+    setError("Something went wrong. Please try again.")
+  } finally {
+    setLoading(null)
+  }
+}
+
+
+  const handleLogin = async () => {
+    setLoading("login")
+    setError(null)
+    setSuccess(null)
+
+    const data = new FormData()
+    data.append("email", formData.email)
+    data.append("password", formData.password)
+
+    const result = await login(data)
+    setLoading(null)
+
+    if (result?.error) {
       setError(result.error)
+    } else {
+      setSuccess("Login successful!")
     }
   }
 
@@ -44,44 +80,68 @@ export default function LoginPage() {
           />
         </CardHeader>
         <CardContent>
-          <form
-            className="space-y-4"
-            // action={async (formData) => {
-            //   // You could differentiate based on a hidden field if needed
-            //   // Or use 2 forms instead of one shared one
-            // }}
-          >
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" name="email" type="email" required />
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                required
+                value={formData.email}
+                onChange={handleChange}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" name="password" type="password" required />
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                required
+                value={formData.password}
+                onChange={handleChange}
+              />
             </div>
 
-            {/* Show messages */}
+            {/* Feedback */}
             {error && <p className="text-red-600 text-sm">{error}</p>}
             {success && <p className="text-green-600 text-sm">{success}</p>}
 
-<div className="flex flex-col space-y-2 pt-4">
+            <div className="flex flex-col space-y-2 pt-4">
               <Button
-                type="submit"
-                formAction={handleLogin}
+                type="button"
+                onClick={handleLogin}
                 className="w-full"
+                disabled={loading === "login"}
               >
-                Log in
+                {loading === "login" ? (
+                  <div className="flex items-center justify-center space-x-2">
+                    <Loader2 className="animate-spin w-4 h-4" />
+                    <span>Logging in...</span>
+                  </div>
+                ) : (
+                  "Log in"
+                )}
               </Button>
               <Button
-                type="submit"
-                formAction={handleSignup}
+                type="button"
+                onClick={handleSignup}
                 variant="outline"
                 className="w-full"
+                disabled={loading === "signup"}
               >
-                Sign up
+                {loading === "signup" ? (
+                  <div className="flex items-center justify-center space-x-2">
+                    <Loader2 className="animate-spin w-4 h-4" />
+                    <span>Signing up...</span>
+                  </div>
+                ) : (
+                  "Sign up"
+                )}
               </Button>
             </div>
-          </form>
+          </div>
         </CardContent>
       </Card>
     </div>
