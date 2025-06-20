@@ -52,12 +52,5 @@ export async function signup(formData: FormData) {
     return { error: 'Profile creation failed' }
   }
 
-  revalidatePath('/', 'layout')
-  redirect('/')
-}
-
-export async function logout() {
-  const supabase = await createClient();
-  await supabase.auth.signOut();
-  redirect("/login");
+  return { success: 'Sign up successful! Please check your email to confirm.' } // ✅
 }
