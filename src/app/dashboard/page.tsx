@@ -6,43 +6,39 @@ import DashboardClient from './DashboardClient';
 export default async function DashboardPage() {
   const supabase = await createClient();
 
+  // Get current user
   const { data: authData, error: authError } = await supabase.auth.getUser();
   if (authError || !authData?.user) {
     redirect('/login');
   }
-
   const user = authData.user;
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('first_name')
-    .eq('user_id', user.id)
-    .single();
+  // Run queries in parallel
+  const [
+    { data: profile },
+    { data: sessions, count: sessionCount },
+  ] = await Promise.all([
+    supabase
+      .from('profiles')
+      .select('first_name')
+      .eq('user_id', user.id)
+      .single(),
 
-  const { count } = await supabase
-    .from('sessions')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', user.id);
-  const sessionCount = count ?? 0;
+    supabase
+      .from('sessions')
+      .select('cause, hours', { count: 'exact' })
+      .eq('user_id', user.id),
+  ]);
 
-  const { data: causeData } = await supabase
-    .from('sessions')
-    .select('cause')
-    .eq('user_id', user.id);
-
-  const uniqueCauses = new Set(causeData?.map((d) => d.cause)).size || 0;
-
-  const { data: hoursData } = await supabase
-    .from('sessions')
-    .select('hours')
-    .eq('user_id', user.id);
-
-  const totalHours = hoursData?.reduce((sum, row) => sum + (row.hours || 0), 0) || 0;
+  // Compute metrics from a single sessions result
+  const uniqueCauses = new Set(sessions?.map((d) => d.cause)).size || 0;
+  const totalHours =
+    sessions?.reduce((sum, row) => sum + (row.hours || 0), 0) || 0;
 
   return (
     <DashboardClient
       profile={profile ?? { first_name: '' }}
-      sessionCount={sessionCount}
+      sessionCount={sessionCount ?? 0}
       uniqueCauses={uniqueCauses}
       totalHours={totalHours}
     />
