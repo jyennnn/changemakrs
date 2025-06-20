@@ -3,20 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { Cause, SessionSchema } from "@/models/dashboard";
+import { SessionSchema } from "@/models/dashboard";
 import { supabase } from "../../../lib/supabase/client";
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Heart, Book, Users, TreePine, PawPrint, Handshake, Puzzle, Palette, MoreHorizontal } from "lucide-react";
+import { Heart, Book, TreePine, PawPrint, Handshake, Puzzle, Palette, MoreHorizontal } from "lucide-react";
 
 export default function LogSessionPage() {
   const router = useRouter();
@@ -37,7 +30,7 @@ export default function LogSessionPage() {
   const causeOptions = [
     { value: "Environment", label: "Environment", icon: TreePine },
     { value: "Animals", label: "Animals", icon: PawPrint },
-    { value: "Youths", label: "Youths", icon: Users },
+    { value: "Youths", label: "Youths", icon: Book },
     { value: "Elderly", label: "Elderly", icon: Heart },
     { value: "Disabilities", label: "Disabilities", icon: Puzzle },
     { value: "Arts & Culture", label: "Arts & Culture", icon: Palette },
