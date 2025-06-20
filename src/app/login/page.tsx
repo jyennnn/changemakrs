@@ -41,7 +41,7 @@ export default function LoginPage() {
     } else {
       setSuccess("Check your inbox to confirm your email before logging in.")
     }
-  } catch (err) {
+  } catch {
     setError("Something went wrong. Please try again.")
   } finally {
     setLoading(null)
