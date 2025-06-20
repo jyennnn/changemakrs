@@ -17,7 +17,10 @@ export const SessionSchema = z.object({
   time: z.string().min(1, "Time is required"),
   hours: z.number().min(1, "Must be at least 1 hour"),
   role: z.string().min(1, "Role is required"),
-  cause: z.nativeEnum(Cause),
+  cause: z.union([
+    z.nativeEnum(Cause),
+    z.string().min(1, "Custom cause must not be empty"),
+  ]),
   organisation: z.string().optional(),
   description: z.string().optional(),
   photo_url: z.string().optional(),
