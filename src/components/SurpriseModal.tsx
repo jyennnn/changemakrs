@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useMemo, useState } from 'react';
+import confetti from 'canvas-confetti';
 import {
   Dialog,
   DialogContent,
@@ -7,9 +9,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
-
 import { Button } from '@/components/ui/button';
-import { useMemo } from 'react';
 
 interface SurpriseModalProps {
   open: boolean;
@@ -18,68 +18,104 @@ interface SurpriseModalProps {
   show: boolean;
 }
 
+const headings = [
+  "💜 You Made a Difference",
+  "🌱 Your Kindness Is Growing Roots",
+  "✨ You're a Light in the Dark",
+  "🌟 You're Living Your Values",
+];
+
 export default function SurpriseModal({
   open,
   setOpen,
   sessionCount,
   show,
 }: SurpriseModalProps) {
-  if (!show) return null;
+  const [quote, setQuote] = useState<string | null>(null);
+  const [hasFired, setHasFired] = useState(false);
 
-  const messages = [
-    {
-      title: "💜 You Made a Difference",
-      body: `You’ve shown up for <strong>{sessionCount}</strong> meaningful moments — and that’s something truly special.
-      <br /><br />
-      Thank you for giving your time, your energy, and your heart — not for applause, but because you care.
-      <br /><br />
-      <em>"The best way to find yourself is to lose yourself in the service of others." – Gandhi</em>`,
-    },
-    {
-      title: "🌱 Your Kindness is Growing Roots",
-      body: `That’s <strong>{sessionCount}</strong> times you gave freely.
-      <br /><br />
-      You’re planting seeds of hope that grow far beyond what you’ll ever see.
-      <br /><br />
-      <em>"Volunteering is the ultimate exercise in democracy." – Marjorie Moore</em>`,
-    },
-    {
-      title: "✨ You're a Light in the Dark",
-      body: `With <strong>{sessionCount}</strong> moments of showing up, you’ve lit the way for others.
-      <br /><br />
-      Never doubt that small, consistent actions change the world.
-      <br /><br />
-      <em>"No act of kindness, no matter how small, is ever wasted." – Aesop</em>`,
-    },
-    {
-      title: "🌟 You're Living Your Values",
-      body: `Every single moment — all <strong>{sessionCount}</strong> of them — is a reflection of who you are.
-      <br /><br />
-      And that person is compassionate, present, and powerful.
-      <br /><br />
-      <em>"We make a living by what we get, but we make a life by what we give." – Churchill</em>`,
-    },
-  ];
-
-  // Pick a random message once per render
-  const selected = useMemo(() => {
-    const index = Math.floor(Math.random() * messages.length);
-    return messages[index];
+  const selectedTitle = useMemo(() => {
+    const index = Math.floor(Math.random() * headings.length);
+    return headings[index];
   }, []);
+
+  // 🎉 Confetti on modal open (once)
+  useEffect(() => {
+    if (open && !hasFired) {
+      setHasFired(true);
+      setTimeout(() => {
+        confetti({
+          particleCount: 120,
+          spread: 100,
+          origin: { y: 0.6 },
+          scalar: 1.2,
+        });
+      }, 200);
+    }
+  }, [open, hasFired]);
+
+  // 💬 Fetch quote
+  useEffect(() => {
+    if (!open) return;
+
+    async function fetchQuote() {
+      try {
+        const res = await fetch('https://api.quotable.io/random?tags=inspirational|wisdom');
+        const data = await res.json();
+        if (data?.content && data?.author) {
+          setQuote(`"${data.content}" – ${data.author}`);
+        } else {
+          throw new Error('No quote');
+        }
+      } catch {
+        const fallbacks = [
+          {
+            content: "Service to others is the rent you pay for your room here on earth.",
+            author: "Muhammad Ali",
+          },
+          {
+            content: "No one has ever become poor by giving.",
+            author: "Anne Frank",
+          },
+          {
+            content: "The meaning of life is to find your gift. The purpose of life is to give it away.",
+            author: "Pablo Picasso",
+          },
+        ];
+        const fallback = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+        setQuote(`"${fallback.content}" – ${fallback.author}`);
+      }
+    }
+
+    fetchQuote();
+  }, [open]);
+
+  if (!show) return null;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="rounded-2xl shadow-xl border-0 max-w-md text-center px-6 py-8 bg-white">
         <DialogHeader className="space-y-2">
           <DialogTitle className="text-3xl font-bold text-[#6B59FF] leading-tight">
-            {selected.title}
+            {selectedTitle}
           </DialogTitle>
-          <DialogDescription
-            className="text-md text-[#444] leading-relaxed"
-            dangerouslySetInnerHTML={{
-              __html: selected.body.replace('{sessionCount}', sessionCount.toString()),
-            }}
-          />
+
+          <DialogDescription asChild>
+            <div className="text-md text-[#444] leading-relaxed space-y-4">
+              <div>
+                You’ve now shown up for <strong>{sessionCount}</strong> meaningful moments.
+                That’s time you gave freely, generously, and with heart. 💫
+              </div>
+              <div>
+                Your impact is real — and felt. Whether seen or unseen, you’ve moved the world forward.
+              </div>
+              {quote && (
+                <div className="text-sm italic text-[#888] mt-2">
+                  {quote}
+                </div>
+              )}
+            </div>
+          </DialogDescription>
         </DialogHeader>
 
         <div className="mt-6">
@@ -87,7 +123,7 @@ export default function SurpriseModal({
             onClick={() => setOpen(false)}
             className="bg-[#6B59FF] hover:bg-[#5848e0] text-white w-full"
           >
-            💫 Keep Making Magic
+            Keep Making Magic ✨
           </Button>
         </div>
       </DialogContent>
