@@ -59,7 +59,7 @@ export default function ActivityClient({ sessions }: { sessions: (Session & { ph
   }, [filteredSessions]);
 
   return (
-    <main className="p-4 max-w-2xl mx-auto space-y-6">
+    <main className="max-w-2xl mx-auto space-y-6">
       <h1 className="text-2xl font-semibold">Activity</h1>
 
       <div className="flex gap-2 items-center">

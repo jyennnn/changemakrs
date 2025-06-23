@@ -45,7 +45,7 @@ export default function DashboardClient({ profile, sessionCount, uniqueCauses, t
       </div>
 
       <div className="flex justify-end items-center z-10 relative">
-        <Link href="/dashboard/log">
+        <Link href="/dashboard/log" prefetch={true}>
           <LogSessionButton />
         </Link>
       </div>
