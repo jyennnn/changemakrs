@@ -24,7 +24,7 @@ export default function DashboardClient({ profile, sessionCount, uniqueCauses, t
       <SurpriseModal open={open} setOpen={setOpen} sessionCount={sessionCount} show={showSurprise} />
 
       <div className="flex justify-between items-center mb-4 w-full">
-        <h1 className="text-left text-4xl font-semibold tracking-tight text-[#424242] leading-[1.2]">
+        <h1 className="text-left text-3xl font-semibold tracking-tight text-[#424242] leading-[1.2]">
           Hi {profile.first_name}, <br />
           <span className="text-[#949494]">You&apos;ve given</span> {totalHours} hour{totalHours === 1 ? '' : 's'}, <br />
           <span className="text-[#949494]">backed</span> {uniqueCauses} cause{uniqueCauses === 1 ? '' : 's'}, <br />
@@ -37,7 +37,7 @@ export default function DashboardClient({ profile, sessionCount, uniqueCauses, t
         <ChangemakrsAnimation sessionCount={sessionCount} />
       </div>
 
-      <p className="text-[#6B59FF] font-semibold text-center text-md -mt-20">
+      <p className="text-[#6B59FF] font-semibold text-center text-sm -mt-20">
         {momentsToNext} more moment{momentsToNext === 1 ? '' : 's'} to a little surprise! <br />
         Thank you for being a Changemakr 💜
       </p>

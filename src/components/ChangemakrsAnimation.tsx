@@ -50,9 +50,9 @@ export default function ChangemakrsAnimation({ sessionCount }: Props) {
     <div>
       <canvas
   id="dotlottie-canvas"
-  width="500"
-  height="500"
-  style={{ width: '500px', height: '500px' }}
+  width="900"
+  height="900"
+  style={{ width: '450px', height: '450px' }}
 />
     </div>
   );
