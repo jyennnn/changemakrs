@@ -9,7 +9,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col text-gray-900">
+    <div className="flex flex-col text-gray-900 h-svh">
       <nav className="py-3 px-3">
         <div className="flex items-center justify-between">
           <div className="flex gap-6 text-muted-foreground">
