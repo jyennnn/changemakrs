@@ -34,7 +34,7 @@ export default function DashboardClient({ profile, sessionCount, uniqueCauses, t
       </div>
 
       <div className="relative flex flex-col max-h-[350px] items-center justify-center ">
-      <div>
+      <div className="pointer-events-none">
         <ChangemakrsAnimation sessionCount={sessionCount} />
       </div>
 
@@ -44,7 +44,7 @@ export default function DashboardClient({ profile, sessionCount, uniqueCauses, t
       </p>
       </div>
 
-      <div className="flex justify-end items-center">
+      <div className="flex justify-end items-center z-10 relative">
         <Link href="/dashboard/log">
           <LogSessionButton />
         </Link>
