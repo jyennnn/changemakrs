@@ -135,7 +135,7 @@ export default function LogSessionPage() {
   }
 
   return (
-    <main className="p-4 mx-auto w-full max-w-2xl">
+    <main className="mx-auto w-full max-w-2xl">
       {/* Header & Progress */}
       <div className="flex items-center justify-between mb-4">
         {step > 1 ? (
