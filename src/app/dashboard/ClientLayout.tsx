@@ -29,7 +29,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         </div>
       </nav>
 
-      <main className="flex-1 px-4 py-4 w-full">{children}</main>
+      <main className="flex-1 px-4 py-4 w-full h-full flex flex-col justify-between">{children}</main>
     </div>
   );
 }

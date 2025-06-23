@@ -32,7 +32,8 @@ export default function DashboardClient({ profile, sessionCount, uniqueCauses, t
           <span className="text-[#949494]">that mattered.</span>
         </h1>
       </div>
-
+      
+      <div>
       <div className="flex items-center justify-center -mt-20">
         <ChangemakrsAnimation sessionCount={sessionCount} />
       </div>
@@ -41,6 +42,7 @@ export default function DashboardClient({ profile, sessionCount, uniqueCauses, t
         {momentsToNext} more moment{momentsToNext === 1 ? '' : 's'} to a little surprise! <br />
         Thank you for being a Changemakr 💜
       </p>
+      </div>
 
       <div className="flex justify-end items-center">
         <Link href="/dashboard/log">
