@@ -13,17 +13,17 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       <nav className="py-3 px-3">
         <div className="flex items-center justify-between">
           <div className="flex gap-6 text-muted-foreground">
-            <Link href="/dashboard">
+            <Link href="/dashboard" prefetch={true}>
               <Home className={`w-6 h-6 ${pathname === "/dashboard" ? "text-purple-600" : ""}`} />
             </Link>
-            <Link href="/dashboard/log">
+            <Link href="/dashboard/log" prefetch={true}>
               <Pencil className={`w-6 h-6 ${pathname === "/dashboard/log" ? "text-purple-600" : ""}`} />
             </Link>
-            <Link href="/dashboard/activity">
+            <Link href="/dashboard/activity" prefetch={true}>
               <List className={`w-6 h-6 ${pathname === "/dashboard/activity" ? "text-purple-600" : ""}`} />
             </Link>
           </div>
-          <Link href="/dashboard/profile">
+          <Link href="/dashboard/profile" prefetch={true}>
             <User className={`w-6 h-6 ${pathname === "/dashboard/profile" ? "text-purple-600" : ""}`} />
           </Link>
         </div>
