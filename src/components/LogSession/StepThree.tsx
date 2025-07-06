@@ -2,8 +2,15 @@
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { LogSessionForm } from "@/types/LogSession";
 
-export default function StepThree({ form, updateForm }: any) {
+interface StepProps {
+  form: LogSessionForm;
+  updateForm: (key: keyof LogSessionForm, value: any) => void;
+  showErrors: boolean;
+}
+
+export default function StepThree({ form, updateForm, showErrors }: StepProps) {
   return (
     <>
       <h2 className="text-lg font-semibold">Add a photo (optional)</h2>
