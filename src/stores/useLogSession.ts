@@ -18,7 +18,7 @@ interface LogSessionState {
   form: LogSessionForm;
   hasHydrated: boolean;
   setStep: (step: number) => void;
-  setFormValue: (key: keyof LogSessionForm, value: any) => void;
+  setFormValue: <K extends keyof LogSessionForm>(key: K, value: LogSessionForm[K]) => void;
   resetForm: () => void;
   resetAll: () => void;
   setHasHydrated: (hydrated: boolean) => void;

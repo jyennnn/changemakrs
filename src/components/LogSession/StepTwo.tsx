@@ -2,8 +2,15 @@
 
 import { Input } from "@/components/ui/input";
 import { causeOptions } from "@/constants/causes";
+import { LogSessionForm } from "@/types/LogSession";
 
-export default function StepTwo({ form, updateForm, showErrors }: any) {
+interface StepProps {
+  form: LogSessionForm;
+  updateForm: (key: keyof LogSessionForm, value: any) => void;
+  showErrors: boolean;
+}
+
+export default function StepTwo({ form, updateForm, showErrors }: StepProps) {
   return (
     <>
       <h2 className="text-lg font-semibold">What did you do?</h2>
