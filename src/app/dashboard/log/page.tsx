@@ -12,6 +12,8 @@ import StepThree from "@/components/LogSession/StepThree";
 
 import { Button } from "@/components/ui/button";
 import { LogSessionForm } from "@/types/LogSession";
+import { toast } from "sonner"
+import { Toaster } from "@/components/ui/sonner"
 
 export default function LogSessionPage() {
   const router = useRouter();
@@ -110,7 +112,12 @@ export default function LogSessionPage() {
       return;
     }
 
-    router.push("/dashboard");
+    
+    
+    toast.success("Session saved successfully!");
+    setTimeout(() => {
+  router.push("/dashboard");
+}, 1000);
   };
 
   return (
@@ -179,6 +186,7 @@ export default function LogSessionPage() {
           </Button>
         )}
       </div>
+      <Toaster />
     </main>
   );
 }
