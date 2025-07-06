@@ -61,7 +61,7 @@ export default async function ProfilePage() {
   const firstLetter = profile?.first_name?.[0] || user.email?.[0] || "?";
 
   return (
-    <main className="mx-auto w-full max-w-2xl">
+    <main className="mx-auto w-full max-w-2xl flex flex-col gap-y-6">
       {/* Avatar & Greeting */}
       <div className="flex flex-col items-center space-y-2">
         <Avatar className="h-16 w-16 text-black font-bold text-xl">
