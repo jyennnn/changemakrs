@@ -11,6 +11,7 @@ import StepTwo from "@/components/LogSession/StepTwo";
 import StepThree from "@/components/LogSession/StepThree";
 
 import { Button } from "@/components/ui/button";
+import { LogSessionForm } from "@/types/LogSession";
 
 export default function LogSessionPage() {
   const router = useRouter();
@@ -30,9 +31,10 @@ export default function LogSessionPage() {
     photo: null as File | null,
   });
 
-  const updateForm = (key: string, value: any) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  };
+
+  const updateForm = <K extends keyof LogSessionForm>(key: K, value: LogSessionForm[K]) => {
+  setForm((prev) => ({ ...prev, [key]: value }));
+};
 
   const isStepValid = () => {
     if (step === 1) return form.date && form.time && form.hours > 0;

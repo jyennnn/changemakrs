@@ -6,11 +6,11 @@ import { LogSessionForm } from "@/types/LogSession";
 
 interface StepProps {
   form: LogSessionForm;
-  updateForm: (key: keyof LogSessionForm, value: any) => void;
+  updateForm: <K extends keyof LogSessionForm>(key: K, value: LogSessionForm[K]) => void;
   showErrors: boolean;
 }
 
-export default function StepThree({ form, updateForm, showErrors }: StepProps) {
+export default function StepThree({ form, updateForm}: StepProps) {
   return (
     <>
       <h2 className="text-lg font-semibold">Add a photo (optional)</h2>
