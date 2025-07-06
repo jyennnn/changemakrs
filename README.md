@@ -52,8 +52,6 @@ The vision is still very much alive — and I plan to return to it when I can bu
 
 ## 🪞 Reflection
 
-## 🪞 Reflection
-
 Changemakrs began with a mission: to go overboard in appreciating volunteers.
 
 Through conversations with friends, non-profit teams, and ground-up initiatives, I realized that celebration often comes at the end of a volunteering journey — if at all. But what if we flipped that? What if we celebrated volunteers **every single time they showed up**, every moment they chose to give their time, energy, and heart?
@@ -70,4 +68,4 @@ Above all, Changemakrs taught me that meaningful software doesn’t always have 
 
 If you're involved in volunteerism, education, or civic tech and want to bring this idea to life — I’d love to connect.
 
-> ✉️ [Contact me](mailto:hellojyennie@gmail.com)
+> ✉️ [Contact me](mailto:hellojyennie@gmail.com) @ hellojyennie@gmail.com
