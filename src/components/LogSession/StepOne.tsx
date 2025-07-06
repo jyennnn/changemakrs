@@ -3,7 +3,7 @@ import { LogSessionForm } from "@/types/LogSession";
 
 interface StepProps {
   form: LogSessionForm;
-  updateForm: (key: keyof LogSessionForm, value: any) => void;
+  updateForm: <K extends keyof LogSessionForm>(key: K, value: LogSessionForm[K]) => void;
   showErrors: boolean;
 }
 
