@@ -17,7 +17,8 @@ type DashboardClientProps = {
 export default function DashboardClient({ profile, sessionCount, uniqueCauses, totalHours }: DashboardClientProps) {
   const showSurprise = sessionCount > 0 && sessionCount % 5 === 0;
   const [open, setOpen] = useState(showSurprise);
-  const momentsToNext = 5 - (sessionCount % 5 || 5);
+  const remainder = sessionCount % 5;
+  const momentsToNext = remainder === 0 ? 5 : 5 - remainder;
 
   return (
     <>

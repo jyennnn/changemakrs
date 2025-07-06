@@ -54,41 +54,36 @@ export default function SurpriseModal({
     }
   }, [open, hasFired]);
 
-  // 💬 Fetch quote
   useEffect(() => {
-    if (!open) return;
+  if (!open) return;
 
-    async function fetchQuote() {
-      try {
-        const res = await fetch('https://api.quotable.io/random?tags=inspirational|wisdom');
-        const data = await res.json();
-        if (data?.content && data?.author) {
-          setQuote(`"${data.content}" – ${data.author}`);
-        } else {
-          throw new Error('No quote');
-        }
-      } catch {
-        const fallbacks = [
-          {
-            content: "Service to others is the rent you pay for your room here on earth.",
-            author: "Muhammad Ali",
-          },
-          {
-            content: "No one has ever become poor by giving.",
-            author: "Anne Frank",
-          },
-          {
-            content: "The meaning of life is to find your gift. The purpose of life is to give it away.",
-            author: "Pablo Picasso",
-          },
-        ];
-        const fallback = fallbacks[Math.floor(Math.random() * fallbacks.length)];
-        setQuote(`"${fallback.content}" – ${fallback.author}`);
-      }
-    }
+  const quotes = [
+    {
+      content: "Service to others is the rent you pay for your room here on earth.",
+      author: "Muhammad Ali",
+    },
+    {
+      content: "No one has ever become poor by giving.",
+      author: "Anne Frank",
+    },
+    {
+      content: "The meaning of life is to find your gift. The purpose of life is to give it away.",
+      author: "Pablo Picasso",
+    },
+    {
+      content: "Volunteers don’t get paid, not because they’re worthless, but because they’re priceless.",
+      author: "Sherry Anderson",
+    },
+    {
+      content: "Act as if what you do makes a difference. It does.",
+      author: "William James",
+    },
+  ];
 
-    fetchQuote();
-  }, [open]);
+  const random = quotes[Math.floor(Math.random() * quotes.length)];
+  setQuote(`"${random.content}" – ${random.author}`);
+}, [open]);
+
 
   if (!show) return null;
 
