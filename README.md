@@ -30,7 +30,7 @@ _Add more if available_
 
 ## 🚀 Live Demo
 
-[Hosted on Vercel](https://your-vercel-link-here) _(or “Coming soon”)_
+https://changemakrs.vercel.app/
 
 ## 🪞 Reflections
 
