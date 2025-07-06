@@ -1,7 +1,8 @@
 // app/dashboard/page.tsx
-import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
-import DashboardClient from './DashboardClient';
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import DashboardClient from "./DashboardClient";
+
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -9,35 +10,43 @@ export default async function DashboardPage() {
   // Get current user
   const { data: authData, error: authError } = await supabase.auth.getUser();
   if (authError || !authData?.user) {
-    redirect('/login');
+    redirect("/login");
   }
   const user = authData.user;
 
   // Run queries in parallel
   const [
+    // query 1
     { data: profile },
-    { data: sessions, count: sessionCount },
+    // query 2
+    { data: sessionCount },
+    //query 3
+    { data: totalHours },
+    { data: uniqueCauses },
+    // Promise.all([...]) lets you run multiple async operations in parallel
   ] = await Promise.all([
+    // query 1 - Get user profile
     supabase
-      .from('profiles')
-      .select('first_name')
-      .eq('user_id', user.id)
+      .from("profiles")
+      .select("first_name")
+      .eq("user_id", user.id)
       .single(),
 
-    supabase
-      .from('sessions')
-      .select('cause, hours', { count: 'exact' })
-      .eq('user_id', user.id),
-  ]);
+    // query 2 - Get session count and details
+    supabase.rpc("session_count_for_user", {
+      uid: user.id,
+    }),
 
-  // Compute metrics from a single sessions result
-  const uniqueCauses = new Set(sessions?.map((d) => d.cause)).size || 0;
-  const totalHours =
-    sessions?.reduce((sum, row) => sum + (row.hours || 0), 0) || 0;
+    // query 3 - Get total hours from sessions
+    supabase.rpc("total_hours_for_user", { uid: user.id }),
+
+    // query 4 - Get unique causes
+    supabase.rpc("unique_causes_for_user", { uid: user.id }),
+  ]);
 
   return (
     <DashboardClient
-      profile={profile ?? { first_name: '' }}
+      profile={profile ?? { first_name: "" }}
       sessionCount={sessionCount ?? 0}
       uniqueCauses={uniqueCauses}
       totalHours={totalHours}

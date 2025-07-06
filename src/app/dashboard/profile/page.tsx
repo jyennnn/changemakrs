@@ -61,7 +61,7 @@ export default async function ProfilePage() {
   const firstLetter = profile?.first_name?.[0] || user.email?.[0] || "?";
 
   return (
-    <div className="p-4 max-w-2xl mx-auto space-y-6">
+    <main className="mx-auto w-full max-w-2xl">
       {/* Avatar & Greeting */}
       <div className="flex flex-col items-center space-y-2">
         <Avatar className="h-16 w-16 text-black font-bold text-xl">
@@ -116,7 +116,7 @@ export default async function ProfilePage() {
       <div className="pt-2">
         <LogoutButton />
       </div>
-    </div>
+    </main>
   );
 }
 

@@ -6,93 +6,90 @@ import { v4 as uuidv4 } from "uuid";
 import { SessionSchema } from "@/models/dashboard";
 import { supabase } from "@/lib/supabase/client";
 
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import {
-  Heart,
-  Book,
-  TreePine,
-  PawPrint,
-  Handshake,
-  Puzzle,
-  Palette,
-  MoreHorizontal,
-} from "lucide-react";
+import StepOne from "@/components/LogSession/StepOne";
+import StepTwo from "@/components/LogSession/StepTwo";
+import StepThree from "@/components/LogSession/StepThree";
 
-const causeOptions = [
-  { value: "Environment", label: "Environment", icon: TreePine },
-  { value: "Animals", label: "Animals", icon: PawPrint },
-  { value: "Youths", label: "Youths", icon: Book },
-  { value: "Elderly", label: "Elderly", icon: Heart },
-  { value: "Disabilities", label: "Disabilities", icon: Puzzle },
-  { value: "Arts & Culture", label: "Arts & Culture", icon: Palette },
-  { value: "Community", label: "Community", icon: Handshake },
-  { value: "Others", label: "Others", icon: MoreHorizontal },
-];
+import { Button } from "@/components/ui/button";
 
 export default function LogSessionPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [showErrors, setShowErrors] = useState(false);
 
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [hours, setHours] = useState(1);
-  const [role, setRole] = useState("");
-  const [cause, setCause] = useState("");
-  const [customCause, setCustomCause] = useState("");
-  const [organisation, setOrganisation] = useState("");
-  const [description, setDescription] = useState("");
-  const [photo, setPhoto] = useState<File | null>(null);
-  const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
+  const [form, setForm] = useState({
+    date: "",
+    time: "",
+    hours: 1,
+    role: "",
+    cause: "",
+    customCause: "",
+    organisation: "",
+    description: "",
+    photo: null as File | null,
+  });
 
-  function markTouched(step: number) {
-    setTouched((prev) => ({
-      ...prev,
-      ...(step === 1 && { date: true, time: true, hours: true }),
-      ...(step === 2 && {
-        role: true,
-        cause: true,
-        ...(cause === "Others" && { customCause: true }),
-      }),
-    }));
-  }
+  const updateForm = (key: string, value: any) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  };
 
-  function validate(step: number) {
-    if (step === 1) return date && time && hours > 0;
-    if (step === 2) {
-      const baseValid = role.trim() && cause.trim();
-      const customValid = cause !== "Others" || customCause.trim();
-      return baseValid && customValid;
-    }
+  const isStepValid = () => {
+    if (step === 1) return form.date && form.time && form.hours > 0;
+    if (step === 2)
+      return (
+        form.role.trim() &&
+        form.cause.trim() &&
+        (form.cause !== "Others" || form.customCause.trim())
+      );
     return true;
-  }
+  };
 
-  async function handleSubmit() {
+  const handleSubmit = async () => {
     setLoading(true);
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+     const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession();
 
-    if (userError || !user) {
-      alert("You must be logged in.");
-      setLoading(false);
-      return;
-    }
+  const user = session?.user;
+
+  if (sessionError || !user) {
+    alert("You must be logged in.");
+    setLoading(false);
+    return;
+  }
 
     const id = uuidv4();
-    const finalCause = cause === "Others" ? customCause : cause;
+    const finalCause = form.cause === "Others" ? form.customCause : form.cause;
+
     let photo_url = "";
+    if (form.photo) {
+      const ext = form.photo.name.split(".").pop();
+      const fileName = `${id}.${ext}`;
+      const { error: uploadError } = await supabase.storage
+        .from("changemakrs-session-photos")
+        .upload(fileName, form.photo);
+
+      if (uploadError) {
+        alert("Photo upload failed.");
+        setLoading(false);
+        return;
+      }
+
+      photo_url = fileName;
+    }
 
     const sessionData = {
       id,
-      date,
-      time,
-      hours,
-      role,
+      date: form.date,
+      time: form.time,
+      hours: form.hours,
+      role: form.role,
       cause: finalCause,
-      organisation,
-      description,
-      photo_url: "",
+      organisation: form.organisation,
+      description: form.description,
+      photo_url,
       user_id: user.id,
     };
 
@@ -104,27 +101,7 @@ export default function LogSessionPage() {
       return;
     }
 
-    if (photo) {
-      const ext = photo.name.split(".").pop();
-      const fileName = `${id}.${ext}`;
-      const { error: uploadError } = await supabase.storage
-        .from("changemakrs-session-photos")
-        .upload(fileName, photo);
-
-      if (uploadError) {
-        alert("Photo upload failed.");
-        setLoading(false);
-        return;
-      }
-
-      photo_url = fileName;
-    }
-
-    const { error } = await supabase.from("sessions").insert({
-      ...result.data,
-      photo_url,
-    });
-
+    const { error } = await supabase.from("sessions").insert(result.data);
     if (error) {
       alert("Failed to save session.");
       setLoading(false);
@@ -132,31 +109,31 @@ export default function LogSessionPage() {
     }
 
     router.push("/dashboard");
-  }
+  };
 
   return (
     <main className="mx-auto w-full max-w-2xl">
-      {/* Header & Progress */}
+      {/* Header */}
       <div className="flex items-center justify-between mb-4">
         {step > 1 ? (
           <button
             type="button"
             onClick={() => setStep((s) => s - 1)}
             className="text-2xl"
-            aria-label="Back"
           >
             ←
           </button>
         ) : (
           <div className="w-6 h-6" />
         )}
-        <div className="flex flex-col items-center flex-grow">
+        <div className="text-center flex-1">
           <h1 className="text-xl font-semibold">Log Session</h1>
           <p className="text-sm text-gray-500">Step {step} of 3</p>
         </div>
         <div className="w-6 h-6" />
       </div>
 
+      {/* Progress Bar */}
       <div className="flex justify-between mb-4">
         {[1, 2, 3].map((s) => (
           <div
@@ -168,106 +145,23 @@ export default function LogSessionPage() {
         ))}
       </div>
 
-      {/* Form Content */}
-      <form className="space-y-4 pt-8 pb-8" onSubmit={(e) => e.preventDefault()}>
-        {step === 1 && (
-          <>
-            <h2 className="text-lg font-semibold">When did you volunteer?</h2>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Date</label>
-              <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-              {touched.date && !date && <p className="text-sm text-red-500">Required</p>}
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Time</label>
-              <Input type="time" value={time} onChange={(e) => setTime(e.target.value)} />
-              {touched.time && !time && <p className="text-sm text-red-500">Required</p>}
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Hours volunteered</label>
-              <Input
-                type="number"
-                min={1}
-                value={hours}
-                onChange={(e) => setHours(Number(e.target.value))}
-              />
-              {touched.hours && hours <= 0 && <p className="text-sm text-red-500">Must be more than 0</p>}
-            </div>
-          </>
-        )}
+      {/* Step Content */}
+      <div className="pt-8 pb-8 space-y-4">
+       {step === 1 && <StepOne form={form} updateForm={updateForm} showErrors={showErrors} />}
+{step === 2 && <StepTwo form={form} updateForm={updateForm} showErrors={showErrors} />}
+        {step === 3 && <StepThree form={form} updateForm={updateForm} showErrors={showErrors} />}
+      </div>
 
-        {step === 2 && (
-          <>
-            <h2 className="text-lg font-semibold">What did you do?</h2>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Your role</label>
-              <Input type="text" value={role} onChange={(e) => setRole(e.target.value)} />
-              {touched.role && !role.trim() && <p className="text-sm text-red-500">Required</p>}
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Organisation (optional)</label>
-              <Input type="text" value={organisation} onChange={(e) => setOrganisation(e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Cause</label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {causeOptions.map(({ value, label, icon: Icon }) => (
-                  <button
-                    type="button"
-                    key={value}
-                    onClick={() => setCause(value)}
-                    className={`border rounded-lg p-3 flex flex-col items-center space-y-1 text-sm ${
-                      cause === value ? "border-[#6B59FF] bg-[#f5f3ff]" : "border-gray-300"
-                    }`}
-                  >
-                    <Icon className="w-5 h-5" />
-                    <span>{label}</span>
-                  </button>
-                ))}
-              </div>
-              {touched.cause && !cause && <p className="text-sm text-red-500">Required</p>}
-              {cause === "Others" && (
-                <div className="mt-4 space-y-1">
-                  <Input
-                    className="text-sm"
-                    placeholder="Enter custom cause"
-                    value={customCause}
-                    onChange={(e) => setCustomCause(e.target.value)}
-                  />
-                  {touched.customCause && !customCause.trim() && (
-                    <p className="text-sm text-red-500">Required</p>
-                  )}
-                </div>
-              )}
-            </div>
-          </>
-        )}
-
-        {step === 3 && (
-          <>
-            <h2 className="text-lg font-semibold">Add a photo (optional)</h2>
-            <Input type="file" accept="image/*" onChange={(e) => setPhoto(e.target.files?.[0] || null)} />
-            <div className="space-y-2 ">
-              <label className="text-sm font-medium">Your favourite moment today</label>
-              <Textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="What did you help with? Any moments that stayed with you?"
-                className="text-sm"
-              />
-            </div>
-          </>
-        )}
-      </form>
-
-      {/* Navigation Button */}
+      {/* Navigation */}
       <div className="pt-4">
         {step < 3 ? (
           <Button
-            type="button"
             onClick={() => {
-              markTouched(step);
-              if (validate(step)) setStep((s) => s + 1);
+              setShowErrors(true);
+              if (isStepValid()) {
+                setStep((s) => s + 1);
+                setShowErrors(false); // Reset for next step
+              }
             }}
             className="w-full bg-[#6B59FF] h-11 rounded-3xl"
           >
@@ -275,10 +169,9 @@ export default function LogSessionPage() {
           </Button>
         ) : (
           <Button
-            type="button"
             onClick={handleSubmit}
-            className="w-full bg-[#6B59FF] h-11 rounded-3xl"
             disabled={loading}
+            className="w-full bg-[#6B59FF] h-11 rounded-3xl"
           >
             {loading ? "Saving..." : "Log my Session"}
           </Button>

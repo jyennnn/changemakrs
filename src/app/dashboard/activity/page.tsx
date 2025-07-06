@@ -4,10 +4,17 @@ import ActivityClient from './ActivityClient';
 export default async function ActivityPage() {
   const supabase = await createClient();
 
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
-  if (userError || !user) {
-    return <p className="text-red-500">You must be logged in to view this page.</p>;
-  }
+ const {
+  data: { session },
+  error: sessionError,
+} = await supabase.auth.getSession();
+
+const user = session?.user;
+
+if (sessionError || !user) {
+  return <p className="text-red-500">You must be logged in to view this page.</p>;
+}
+
 
   const { data: sessions, error: sessionsError } = await supabase
     .from('sessions')
