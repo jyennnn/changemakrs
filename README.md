@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌱 Changemakrs
 
-## Getting Started
+Changemakrs is a volunteering tracker app designed to help individuals log, visualize, and reflect on their contributions to their communities. It was inspired by civic tech efforts to encourage public service and make social impact more visible.
 
-First, run the development server:
+## 🧠 Why I Built This
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Volunteering often goes undocumented, and many people don’t realize the impact they’ve made over time. I wanted to build a simple tool to track and celebrate community work, especially for youths or students involved in service-learning.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This project is also a personal experiment to learn full-stack development using modern tools like Next.js and Firebase.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ✨ Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Add and track volunteering activities
+- View a list or timeline of all activities
+- Store data securely in the cloud
+- Clean, responsive UI
 
-## Learn More
+_(Some features are still in development — this is an early version of the app.)_
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠 Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Frontend:** Next.js, React, TailwindCSS
+- **Backend/Database:** Firebase
+- **Auth (Planned):** Firebase Auth
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📸 Screenshots
 
-## Deploy on Vercel
+![Homepage screenshot](link-to-screenshot-if-any)
+_Add more if available_
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🚀 Live Demo
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[Hosted on Vercel](https://your-vercel-link-here) _(or “Coming soon”)_
+
+## 🪞 Reflections
+
+This was my first full-stack project that focused on solving a social good problem. While there are areas I’d refactor or design differently now, it taught me a lot about React state management, data modeling, and deployment.
+
+## 📌 Status
+
+🚧 In progress – actively working on polish, authentication, and better UI feedback.
+
