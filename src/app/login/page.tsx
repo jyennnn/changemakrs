@@ -15,6 +15,14 @@ export default function LoginPage() {
 
   const [formData, setFormData] = useState({ email: "", password: "" })
 
+
+const handleTestLogin = () => {
+  setFormData({
+    email: "hellojyennie@gmail.com",
+  password: "testing"
+  })
+}
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
@@ -123,8 +131,16 @@ export default function LoginPage() {
                 ) : (
                   "Log in"
                 )}
-              </Button>
-              <Button
+                </Button> 
+                <Button
+  type="button"
+  onClick={handleTestLogin}
+  variant="outline"
+  className="w-full text-sm"
+>
+  Use test account
+</Button>
+              {/* <Button
                 type="button"
                 onClick={handleSignup}
                 variant="outline"
@@ -139,7 +155,7 @@ export default function LoginPage() {
                 ) : (
                   "Sign up"
                 )}
-              </Button>
+              </Button> */}
             </div>
           </div>
         </CardContent>
