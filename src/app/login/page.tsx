@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-// import { login, signup } from "../actions/auth"
-import { login } from "../actions/auth"
+import { login, signup } from "../actions/auth"
+// import { login } from "../actions/auth"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -28,34 +28,34 @@ const handleTestLogin = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-//   const handleSignup = async () => {
-//   setLoading("signup")
-//   setError(null)
-//   setSuccess(null)
+  const handleSignup = async () => {
+  setLoading("signup")
+  setError(null)
+  setSuccess(null)
 
-//   try {
-//     const data = new FormData()
-//     data.append("email", formData.email)
-//     data.append("password", formData.password)
+  try {
+    const data = new FormData()
+    data.append("email", formData.email)
+    data.append("password", formData.password)
 
-//     const result = await signup(data)
+    const result = await signup(data)
 
-//     if (result?.error) {
-//       // Handle Supabase's "user already registered" wording
-//       if (result.error.includes("already registered")) {
-//         setError("This email is already registered. Try logging in instead.")
-//       } else {
-//         setError(result.error)
-//       }
-//     } else {
-//       setSuccess("Check your inbox to confirm your email before logging in.")
-//     }
-//   } catch {
-//     setError("Something went wrong. Please try again.")
-//   } finally {
-//     setLoading(null)
-//   }
-// }
+    if (result?.error) {
+      // Handle Supabase's "user already registered" wording
+      if (result.error.includes("already registered")) {
+        setError("This email is already registered. Try logging in instead.")
+      } else {
+        setError(result.error)
+      }
+    } else {
+      setSuccess("Check your inbox to confirm your email before logging in.")
+    }
+  } catch {
+    setError("Something went wrong. Please try again.")
+  } finally {
+    setLoading(null)
+  }
+}
 
 
   const handleLogin = async () => {
@@ -141,22 +141,21 @@ const handleTestLogin = () => {
 >
   Use test account
 </Button>
-              {/* <Button
-                type="button"
-                onClick={handleSignup}
-                variant="outline"
-                className="w-full"
-                disabled={loading === "signup"}
-              >
-                {loading === "signup" ? (
-                  <div className="flex items-center justify-center space-x-2">
-                    <Loader2 className="animate-spin w-4 h-4" />
-                    <span>Signing up...</span>
-                  </div>
-                ) : (
-                  "Sign up"
-                )}
-              </Button> */}
+              <button
+  type="button"
+  onClick={handleSignup}
+  className="text-sm font-medium text-gray-400 hover:underline disabled:opacity-50"
+  disabled={loading === "signup"}
+>
+  {loading === "signup" ? (
+    <div className="flex items-center space-x-2">
+      <Loader2 className="animate-spin w-4 h-4" />
+      <span>Signing up...</span>
+    </div>
+  ) : (
+    "Sign up"
+  )}
+</button>
             </div>
           </div>
         </CardContent>
